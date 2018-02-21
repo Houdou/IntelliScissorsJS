@@ -1,10 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
 image-upload {
 	transition: opacity 0.8s ease;
-	height: 100%;
+	height: calc(100% - 54px);
 	width: 100%;
 	position: absolute;
-	top: 0;
+	top: 54px;
+	left: 0;
 }
 .upload-handle {
 	opacity: 0.5;
@@ -14,7 +15,7 @@ image-upload {
 }
 .img-ul {
 	height: 100%;
-	background-color: rgba(180, 180, 180, 0.4) !important;
+	background-color: transparent !important;
 }
 .img-ul-container, .img-ul-button, .img-ul-upload {
 	display: none !important;
@@ -22,7 +23,7 @@ image-upload {
 .img-ul-drag-box-msg {
 	line-height: 64px;
 	font-size: 64px;
-	color: rgba(40, 40, 40, 0.5) !important;
+	color: rgba(200, 200, 200, 0.5) !important;
 }
 .img-ul-hr-inline-group {
 	position: relative;
@@ -31,4 +32,68 @@ image-upload {
 	flex-flow: row;
 	justify-content: center;
 	align-items: center;
+}
+
+/*Dropdown*/
+.pure-menu {
+	height: 54px;
+	padding: 0 5px;
+}
+.pure-menu * {
+	z-index: 9999;
+}
+
+.pure-menu .pure-menu-list {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+	position: relative;
+	height: inherit;
+}
+	
+.pure-menu .pure-menu-list .pure-menu-item {
+	display: inline-block;
+}
+
+.pure-menu > .pure-menu-list {
+	line-height: 54px;
+	margin: 0 0 0 10px;
+}
+
+.pure-menu a {
+	color: white;
+	display:block;
+	padding:0 10px;	
+	font-size:20px;
+	height: inherit;
+	text-decoration:none;
+}
+
+/* Hide Dropdowns by Default */
+.pure-menu .pure-menu-list .pure-menu-list {
+	display: none;
+	position: absolute; 
+	top: 54px; /* the height of the main pure-menu */
+}
+
+/* Display Dropdowns on Hover */
+.pure-menu-operable .pure-menu-list .pure-menu-item:hover > .pure-menu-list {
+	display: inherit;
+}
+	
+/* Fisrt Tier Dropdown */
+.pure-menu .pure-menu-list .pure-menu-list .pure-menu-item {
+	height: 44px;
+	width: 180px;
+	line-height: 44px;
+	float: none;
+	display: list-item;
+	position: relative;
+}
+
+/* Second, Third and more Tiers	*/
+.pure-menu .pure-menu-list .pure-menu-list .pure-menu-list .pure-menu-item {
+	position: relative;
+	top: -54px; 
+	left: 180px;
 }

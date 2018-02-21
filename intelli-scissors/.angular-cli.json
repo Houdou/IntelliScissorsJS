@@ -22,7 +22,9 @@
         "styles.css",
         "pure.css"
       ],
-      "scripts": [],
+      "scripts": [
+        "pure-dropdown.js"
+      ],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",

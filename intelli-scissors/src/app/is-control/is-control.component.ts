@@ -1,15 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'is-control',
-  templateUrl: './is-control.component.html',
-  styleUrls: ['./is-control.component.css']
+	selector: 'is-control',
+	templateUrl: './is-control.component.html',
+	styleUrls: ['./is-control.component.css']
 })
 export class IsControlComponent implements OnInit {
+	@Input('MenuBarTitle')
+	private MenuBarTitle: string;
 
-  constructor() { }
+	public menuOperable: boolean =  true;
 
-  ngOnInit() {
-  }
+	constructor() { }
+
+	ngOnInit() {
+	}
 
 }

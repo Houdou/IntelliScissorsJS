@@ -1,4 +1,4 @@
 <div class="root">
-	<div class="control-area"><is-control></is-control></div>
-	<div class="drawing-area"><is-drawing></is-drawing></div>
+	<is-control class="control-area" (onMenuFunction)="HandleMenu($event)" MenuBarTitle="{{title}}"></is-control>
+	<is-drawing class="drawing-area" (onImageLoaded)="HandleImageLoaded($event)"></is-drawing>
 </div>

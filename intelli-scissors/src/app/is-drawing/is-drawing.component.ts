@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 
 import * as createjs from 'createjs-module';
 
@@ -30,6 +30,13 @@ export class IsDrawingComponent implements OnInit {
 	ngOnInit() {
 
 
+	}
+
+	@HostListener('window:resize')
+	onResize() {    	
+		this.canvas.height = this.canvas.offsetHeight;
+		this.canvas.width = this.canvas.offsetWidth;
+		this.stage.update();
 	}
 
 	ngAfterViewInit() {
