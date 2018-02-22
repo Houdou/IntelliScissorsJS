@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
 	selector: 'is-control',
@@ -9,11 +9,20 @@ export class IsControlComponent implements OnInit {
 	@Input('MenuBarTitle')
 	private MenuBarTitle: string;
 
-	public menuOperable: boolean =  true;
+	@Output()
+	public onMenuFunction = new EventEmitter<object>();
+
+	public menuOperable: boolean = false;
 
 	constructor() { }
 
 	ngOnInit() {
+	}
+
+	private Emit(eventName: string):void {
+		let event: any = {};
+		event.name = eventName;
+		this.onMenuFunction.emit(event);
 	}
 
 }

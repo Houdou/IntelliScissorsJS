@@ -1,28 +1,28 @@
 <div class="menu-bar">
-    <nav class="pure-menu" [ngClass]="{'pure-menu-operable': menuOperable}">
+    <nav class="pure-menu" [ngClass]="{'pure-menu-active': menuOperable}">
         <ul class="pure-menu-list">
-            <li class="pure-menu-item"><a href="#" class="pure-menu-link">Reset image</a></li>
+            <li class="pure-menu-item"><button href="#" class="pure-menu-button" (click)="menuOperable && Emit('ResetImage')">Reset image</button></li>
             <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
-                <a href="#" id="menuLink1" class="pure-menu-link">File</a>
+                <button href="#" id="menuLink1" class="pure-menu-button">File</button>
                 <ul class="pure-menu-list">
-                    <li class="pure-menu-item"><a href="#" class="pure-menu-link">Save contour</a></li>
-                    <li class="pure-menu-item"><a href="#" class="pure-menu-link">Save mask</a></li>
+                    <li class="pure-menu-item"><button href="#" class="pure-menu-button" (click)="Emit('SaveContour')">Save contour</button></li>
+                    <li class="pure-menu-item"><button href="#" class="pure-menu-button" (click)="Emit('SaveMask')">Save mask</button></li>
                 </ul>
             </li>
             <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
-                <a href="#" id="menuLink2" class="pure-menu-link">Display</a>
+                <button href="#" id="menuLink2" class="pure-menu-button">Display</button>
                 <ul class="pure-menu-list">
-                    <li class="pure-menu-item"><a href="#" class="pure-menu-link">Image only</a></li>
-                    <li class="pure-menu-item"><a href="#" class="pure-menu-link">Image + contour</a></li>
+                    <li class="pure-menu-item"><button href="#" class="pure-menu-button" (click)="Emit('DisplayImage')">Image only</button></li>
+                    <li class="pure-menu-item"><button href="#" class="pure-menu-button" (click)="Emit('DisplayImageContour')">Image + contour</button></li>
                 </ul>
             </li>
             <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
-                <a href="#" id="menuLink2" class="pure-menu-link">Debug</a>
+                <button href="#" id="menuLink2" class="pure-menu-button">Debug</button>
                 <ul class="pure-menu-list">
-                    <li class="pure-menu-item"><a href="#" class="pure-menu-link">Pixel node</a></li>
-                    <li class="pure-menu-item"><a href="#" class="pure-menu-link">Cost graph</a></li>
-                    <li class="pure-menu-item"><a href="#" class="pure-menu-link">Path tree</a></li>
-                    <li class="pure-menu-item"><a href="#" class="pure-menu-link">Min path</a></li>
+                    <li class="pure-menu-item"><button href="#" class="pure-menu-button" (click)="Emit('PixelNode')">Pixel node</button></li>
+                    <li class="pure-menu-item"><button href="#" class="pure-menu-button" (click)="Emit('CostGraph')">Cost graph</button></li>
+                    <li class="pure-menu-item"><button href="#" class="pure-menu-button" (click)="Emit('PathTree')">Path tree</button></li>
+                    <li class="pure-menu-item"><button href="#" class="pure-menu-button" (click)="Emit('MinPath')">Min path</button></li>
                 </ul>
             </li>
         </ul>

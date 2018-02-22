@@ -1,17 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
 image-upload {
-	transition: opacity 0.8s ease;
 	height: calc(100% - 54px);
 	width: 100%;
 	position: absolute;
 	top: 54px;
 	left: 0;
+	opacity: 0.6;
 }
 .upload-handle {
-	opacity: 0.5;
+	display: initial;
 }
 .hide-upload-handle {
-	opacity: 0;
+	display: none;
 }
 .img-ul {
 	height: 100%;
@@ -38,9 +38,16 @@ image-upload {
 .pure-menu {
 	height: 54px;
 	padding: 0 5px;
+	z-index: 9999;
+
+	opacity: 0.2;
+	transition: opacity 1s ease;
+}
+.pure-menu-active {
+	opacity: 1;
 }
 .pure-menu * {
-	z-index: 9999;
+	z-index: 9990;
 }
 
 .pure-menu .pure-menu-list {
@@ -53,6 +60,7 @@ image-upload {
 	
 .pure-menu .pure-menu-list .pure-menu-item {
 	display: inline-block;
+	background-color: #535353;
 }
 
 .pure-menu > .pure-menu-list {
@@ -60,26 +68,42 @@ image-upload {
 	margin: 0 0 0 10px;
 }
 
-.pure-menu a {
+.pure-menu-button {
+	width: 100%;
 	color: white;
 	display:block;
 	padding:0 10px;	
-	font-size:20px;
+	font-size: 20px;
+	text-align: left;
 	height: inherit;
 	text-decoration:none;
+	border: none;
+	background-color: transparent;
 }
-
 /* Hide Dropdowns by Default */
 .pure-menu .pure-menu-list .pure-menu-list {
 	display: none;
 	position: absolute; 
 	top: 54px; /* the height of the main pure-menu */
 }
+.pure-menu .pure-menu-list .pure-menu-list .pure-menu-button {
+	font-size: 18px;
+}
 
 /* Display Dropdowns on Hover */
-.pure-menu-operable .pure-menu-list .pure-menu-item:hover > .pure-menu-list {
+.pure-menu-active .pure-menu-list .pure-menu-item:hover > .pure-menu-list {
 	display: inherit;
 }
+
+.pure-menu-has-children > .pure-menu-button:after {
+    padding-left: 0.5em;
+    content: "\25B8";
+}
+
+.pure-menu-active .pure-menu-list .pure-menu-item:hover > .pure-menu-has-children > .pure-menu-button:after {
+	content: "\25BE";
+}
+
 	
 /* Fisrt Tier Dropdown */
 .pure-menu .pure-menu-list .pure-menu-list .pure-menu-item {
@@ -89,6 +113,11 @@ image-upload {
 	float: none;
 	display: list-item;
 	position: relative;
+    box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(160, 160, 160, 0.6);
+}
+.pure-menu .pure-menu-list .pure-menu-list .pure-menu-item:last-child {
+    border-bottom: none;
 }
 
 /* Second, Third and more Tiers	*/

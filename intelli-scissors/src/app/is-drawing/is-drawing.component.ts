@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener, EventEmitter, Output } from '@angular/core';
 
 import * as createjs from 'createjs-module';
 
@@ -25,6 +25,9 @@ export class IsDrawingComponent implements OnInit {
 		this.stage.scaleX = this.stage.scaleY = v;
 	}
 
+	@Output()
+	public onImageLoaded = new EventEmitter<any>();
+
 	constructor(private ele: ElementRef) { }
 
 	ngOnInit() {
@@ -36,6 +39,9 @@ export class IsDrawingComponent implements OnInit {
 	onResize() {    	
 		this.canvas.height = this.canvas.offsetHeight;
 		this.canvas.width = this.canvas.offsetWidth;
+
+		this.stage.x = this.canvas.width / 2;
+		this.stage.y = this.canvas.height / 2;
 		this.stage.update();
 	}
 
@@ -51,14 +57,18 @@ export class IsDrawingComponent implements OnInit {
 		this.stage.x = this.stage.regX = this.canvas.width / 2;
 		this.stage.y = this.stage.regY = this.canvas.height / 2;
 		this.stage.autoClear = true;
+		this.stage.enableMouseOver();
 
 		createjs.Ticker.setFPS(30);
 		createjs.Ticker.addEventListener("tick", this.stage);
 	}
 
 	public LoadImage(img: any): void {
-		var bmp = new createjs.Bitmap(img);
+		var bmp = new createjs.Bitmap(img);		
 		setTimeout(() => {
+			bmp.on('click', (event) => {
+				console.log(event);
+			});
 			let w = bmp.image.width, h = bmp.image.height;
 			bmp.regX = w/2;
 			bmp.regY = h/2;
@@ -70,6 +80,7 @@ export class IsDrawingComponent implements OnInit {
 				let sW = this.canvas.width / w, sH = this.canvas.height / h;
 				this.scale = Math.min(sW, sH, 1);
 			}
+			this.onImageLoaded.emit(bmp.image);
 			this.stage.addChild(bmp);
 		}, 0);
 		this.stage.update();

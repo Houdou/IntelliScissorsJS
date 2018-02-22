@@ -1336,7 +1336,9 @@ since IE8 won't execute CSS that contains a CSS3 selector.
 .pure-menu-has-children > .pure-menu-link:after {
     padding-left: 0.5em;
     content: "\25B8";
-    font-size: small;
+}
+.pure-menu-active .pure-menu-has-children:hover > .pure-menu-link:after {
+    content: "\25BE";
 }
 
 /* Horizontal Menus - show the dropdown arrow */
@@ -1421,8 +1423,8 @@ since IE8 won't execute CSS that contains a CSS3 selector.
 }
 
 .pure-menu-active > .pure-menu-link,
-.pure-menu-link:hover {
-    background-color: #F0F0F0;
+.pure-menu-active .pure-menu-item:hover {
+    background-color: #707070;
 }
 
 .pure-menu-selected .pure-menu-link,
