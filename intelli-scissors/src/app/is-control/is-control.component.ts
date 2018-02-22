@@ -25,4 +25,9 @@ export class IsControlComponent implements OnInit {
 		this.onMenuFunction.emit(event);
 	}
 
+	public Reset(): void {
+		this.menuOperable = false;
+		// TODO: Reset menubar status (modes)
+	}
+
 }

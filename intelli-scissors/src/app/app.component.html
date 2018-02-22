@@ -1,4 +1,4 @@
 <div class="root">
 	<is-control class="control-area" (onMenuFunction)="HandleMenu($event)" MenuBarTitle="{{title}}"></is-control>
-	<is-drawing class="drawing-area" (onImageLoaded)="HandleImageLoaded($event)"></is-drawing>
+	<is-drawing class="drawing-area" (onImageLoaded)="HandleImageLoaded($event)" (onPixelSelected)="HandlePixelSelect($event)"></is-drawing>
 </div>
