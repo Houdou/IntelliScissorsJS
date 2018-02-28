@@ -7,7 +7,8 @@ import { IsDrawingComponent } from './is-drawing/is-drawing.component';
 import { IsControlComponent } from './is-control/is-control.component';
 
 
-import { ImageUploadModule } from "angular2-image-upload";
+import { ImageUploadModule } from 'angular2-image-upload';
+
 
 @NgModule({
   declarations: [

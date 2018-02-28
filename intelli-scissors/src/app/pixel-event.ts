@@ -1,8 +1,12 @@
-export class PixelInfo {
+export class PixelEvent {
 	public x: number;
 	public y: number;
 	public stageX: number;
 	public stageY: number;
+
+	public altKey: boolean;
+	public ctrlKey: boolean;
+	public shiftKey: boolean;
 
 	public data: Uint8ClampedArray;
 

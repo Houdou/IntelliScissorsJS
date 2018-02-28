@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener, EventEmitter, Output } from '@angular/core';
 
 import * as createjs from 'createjs-module';
-import { PixelInfo } from '../pixel-info';
+import { PixelEvent } from '../pixel-event';
+
+import { ImageUploadComponent } from 'angular2-image-upload';
 
 @Component({
 	selector: 'is-drawing',
@@ -12,13 +14,16 @@ export class IsDrawingComponent implements OnInit {
 	@ViewChild("canvas")
 	private canvasRef: ElementRef;
 
+	@ViewChild(ImageUploadComponent)
+	private upload: ImageUploadComponent;
+
 	private canvas: HTMLCanvasElement;
 	private stage: createjs.Stage;
 
 	public handleUpload: boolean = true;
 	private imageLoaded: boolean = false;
 
-	private _scale : number;
+	private _scale : number = 1;
 	public get scale() : number {
 		return this._scale;
 	}
@@ -31,7 +36,7 @@ export class IsDrawingComponent implements OnInit {
 	public onImageLoaded = new EventEmitter<any>();
 
 	@Output()
-	public onPixelSelected = new EventEmitter<PixelInfo>();
+	public onPixelEvent = new EventEmitter<PixelEvent>();
 
 	constructor(private ele: ElementRef) { }
 
@@ -41,12 +46,19 @@ export class IsDrawingComponent implements OnInit {
 	private bmp: createjs.Bitmap;
 	private imageContext: CanvasRenderingContext2D;
 
+	private uiContainer: createjs.Container;
+	private progressBar: createjs.Shape;
+	private seeds: Array<createjs.Shape> = new Array<createjs.Shape>();
+
 	@HostListener('window:resize')
 	onResize() {    	
 		this.canvas.height = this.canvas.offsetHeight;
 		this.canvas.width = this.canvas.offsetWidth;
 		this.stage.x = this.canvas.width / 2;
 		this.stage.y = this.canvas.height / 2;
+
+		this.progressBar.graphics.clear().beginFill('#D0D0D0').dr(0, 1, this.canvas.width, 3);
+
 		if(this.imageLoaded) {
 			let w = this.bmp.image.width, h = this.bmp.image.height;
 			if(w > this.canvas.width || h > this.canvas.height) {
@@ -69,9 +81,16 @@ export class IsDrawingComponent implements OnInit {
 		this.stage = new createjs.Stage(this.canvas);
 		this.stage.autoClear = true;
 		this.stage.enableMouseOver();
+		this.uiContainer = new createjs.Container();
 
-		createjs.Ticker.setFPS(30);
-		createjs.Ticker.addEventListener("tick", this.stage);
+		this.progressBar = new createjs.Shape();
+		this.progressBar.graphics.beginFill('#D0D0D0').dr(0, 1, this.canvas.width, 3);
+		this.progressBar.scaleX = 0;
+		this.uiContainer.addChild(this.progressBar);
+
+		this.stage.addChild(this.uiContainer);
+		this.stage.setChildIndex(this.uiContainer, this.stage.numChildren);
+		this.stage.update();
 	}
 
 	public LoadImage(img: any): void {
@@ -91,11 +110,16 @@ export class IsDrawingComponent implements OnInit {
 	}
 
 	private prepareImage(): void {
+		this.HideImage();
 		// Create pixel selection event
-		this.bmp.on('click', (event) => {
+		this.bmp.on('click', (event: any) => {
 			console.log(event);
 			let [x, y, sx, sy] = this.getImageCoord(event as createjs.MouseEvent);;
-			this.onPixelSelected.emit(new PixelInfo(x, y, sx, sy, this.GetPixelsAt(x, y, sx, sy, 1)));
+			const e = new PixelEvent(x, y, sx, sy, this.GetPixelsAt(x, y, sx, sy, 1));
+			e.altKey = event.nativeEvent.altKey;
+			e.ctrlKey = event.nativeEvent.ctrlKey;
+			e.shiftKey = event.nativeEvent.shiftKey;
+			this.onPixelEvent.emit(e);
 		});
 		let w = this.bmp.image.width, h = this.bmp.image.height;
 
@@ -111,17 +135,40 @@ export class IsDrawingComponent implements OnInit {
 			let sW = this.canvas.width / w, sH = this.canvas.height / h;
 			this.scale = Math.min(sW, sH, 1);
 		}
-		this.onImageLoaded.emit(this.bmp.image);
+		let e: any = {};
+		e.width = w;
+		e.height = h;
+		e.image = this.bmp.image;
+		this.progressBar.x = -this.canvas.width/2;
+		this.progressBar.y = -this.canvas.height/2;
+		this.onImageLoaded.emit(e);
+		this.stage.update();
+	}
+
+	public HideImage(): void {
+		if(this.bmp == null) return;
+		this.bmp.alpha = 0;
+		this.stage.update();
+	}
+
+	public ShowImage(): void {
+		if(this.bmp == null) return;
+		this.stage.setChildIndex(this.bmp, 0);
 		this.bmp.alpha = 1;
+		this.stage.update();
 	}
 
 	public Reset(): void {
 		if(this.bmp != null) {
 			this.stage.removeChild(this.bmp);
+			this.stage.x = 0;
+			this.stage.y = 0;
 			this.stage.update();
 			this.bmp = null;
 		}
+		this.ResetSeeds();
 		this.imageLoaded = false;
+		this.upload.deleteAll();
 		this.handleUpload = true;
 	}
 
@@ -149,5 +196,40 @@ export class IsDrawingComponent implements OnInit {
 		if(!this.imageLoaded) return;
 		// TOOD: Handle border
 		return this.imageContext.getImageData(sx - extend, sy - extend, 1 + 2 * extend, 1 + 2 * extend).data;
+	}
+
+	public GetAllPixels(): Uint8ClampedArray {
+		if(!this.imageLoaded) return;
+		let x = - this.bmp.image.width / 2 * this.scale, y = - this.bmp.image.height / 2 * this.scale;
+		let w = this.bmp.image.width * this.scale, h = this.bmp.image.height * this.scale;
+		return this.imageContext.getImageData(x - 1, y - 1, w + 2, h + 2).data;
+	}
+
+	public ResetSeeds(): void {
+		if(this.seeds.length > 0) {
+			this.seeds.forEach(s => {
+				this.uiContainer.removeChild(s);
+			})
+			this.seeds = new Array<createjs.Shape>();
+			this.stage.update();
+		}
+	}
+
+	public DrawSeeds(x: number, y: number): void {
+		let s = new createjs.Shape();
+		s.graphics.beginFill('#ff8052').dc(0, 0, 5);
+		s.x = x - this.bmp.image.width/2;
+		s.y = y - this.bmp.image.height/2;
+		console.log(s);
+		this.seeds.push(s);
+		this.uiContainer.addChild(s);
+		this.stage.setChildIndex(this.bmp, 0);
+		this.stage.setChildIndex(this.uiContainer, this.stage.numChildren);
+		this.stage.update();
+	}
+
+	public UpdateLoadingProgress(p: number): void {
+		this.progressBar.scaleX = Math.min(Math.max(p, 0), 1);
+		this.stage.update();
 	}
 }
